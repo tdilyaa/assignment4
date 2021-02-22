@@ -2,8 +2,8 @@ package com.company;
 
 import com.company.data.PostgresDB;
 import com.company.data.interfaces.IDB;
-import com.company.repositories.UserRepository;
-import com.company.repositories.interfaces.IUserRepository;
+import com.company.repositories.EmployeeRepository;
+import com.company.repositories.interfaces.IEmployeeRepository;
 
 public class Main {
 
@@ -46,7 +46,7 @@ public class Main {
         // Here you specify which DB and UserRepository to use
         // And changing DB should not affect to whole code
         IDB db = new PostgresDB();
-        IUserRepository repo = new UserRepository(db);
+        IEmployeeRepository repo = new EmployeeRepository(db);
         MyApplication app = new MyApplication(repo);
         app.start();
     }

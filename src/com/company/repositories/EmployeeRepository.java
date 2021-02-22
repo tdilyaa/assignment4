@@ -1,32 +1,35 @@
 package com.company.repositories;
 
 import com.company.data.interfaces.IDB;
-import com.company.entities.User;
-import com.company.repositories.interfaces.IUserRepository;
+import com.company.entities.Employee;
+import com.company.repositories.interfaces.IEmployeeRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public class UserRepository implements IUserRepository {
+public class EmployeeRepository implements IEmployeeRepository {
     private final IDB db;
 
-    public UserRepository(IDB db) {
+    public EmployeeRepository(IDB db) {
         this.db = db;
     }
 
     @Override
-    public boolean createUser(User user) {
+    public boolean createUser(Employee employee) {
         Connection con = null;
         try {
             con = db.getConnection();
-            String sql = "INSERT INTO users(name,surname,gender) VALUES (?,?,?)";
+            String sql = "INSERT INTO users(name, surname,gender, mail, JobPosition, salary ) VALUES (?,?,?,?,?,?)";
             PreparedStatement st = con.prepareStatement(sql);
 
-            st.setString(1, user.getName());
-            st.setString(2, user.getSurname());
-            st.setBoolean(3, user.getGender());
+            st.setString(1, employee.getName());
+            st.setString(2, employee.getSurname());
+            st.setBoolean(3, employee.getGender());
+            st.setString(4, employee.getMail());
+            st.setString(5, employee.getJobPosition());
+            st.setInt(6, employee.getSalary());
+
 
             boolean executed = st.execute();
             return executed;
@@ -45,23 +48,29 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public User getUser(int id) {
+    public Employee getUser(int id) {
         Connection con = null;
         try {
             con = db.getConnection();
-            String sql = "SELECT id,name,surname,gender FROM users WHERE id=?";
+            String sql = "SELECT id,name,surname,gender, mail, JobPosition, salary  FROM users WHERE id=?";
             PreparedStatement st = con.prepareStatement(sql);
 
             st.setInt(1, id);
 
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                User user = new User(rs.getInt("id"),
+                Employee employee = new Employee
+                        (rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("surname"),
-                        rs.getBoolean("gender"));
+                        rs.getBoolean("gender"),
+                        rs.getString("mail"),
+                        rs.getString("JobPosition"),
+                        rs.getInt("salary"));
 
-                return user;
+
+
+                return employee;
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -77,8 +86,9 @@ public class UserRepository implements IUserRepository {
         return null;
     }
 
+
     @Override
-    public List<User> getAllUsers() {
+    public List<Employee> getAllEmployees() {
         Connection con = null;
         try {
             con = db.getConnection();
@@ -86,17 +96,21 @@ public class UserRepository implements IUserRepository {
             Statement st = con.createStatement();
 
             ResultSet rs = st.executeQuery(sql);
-            List<User> users = new ArrayList<>();
+            List<Employee> employees = new ArrayList<>();
             while (rs.next()) {
-                User user = new User(rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("surname"),
-                        rs.getBoolean("gender"));
+                Employee employee = new Employee
+                                (rs.getInt("id"),
+                                rs.getString("name"),
+                                rs.getString("surname"),
+                                rs.getBoolean("gender"),
+                                rs.getString("mail"),
+                                rs.getString("JobPosition"),
+                                rs.getInt("salary"));
 
-                users.add(user);
+                employees.add(employee);
             }
 
-            return users;
+            return employees;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -108,6 +122,11 @@ public class UserRepository implements IUserRepository {
                 throwables.printStackTrace();
             }
         }
+        return null;
+    }
+
+    @Override
+    public List<Employee> getAllUsers() {
         return null;
     }
 }

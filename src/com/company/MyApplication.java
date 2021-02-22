@@ -1,16 +1,16 @@
 package com.company;
 
-import com.company.controllers.UserController;
-import com.company.repositories.interfaces.IUserRepository;
+import com.company.controllers.EmployeeController;
+import com.company.repositories.interfaces.IEmployeeRepository;
 
 import java.util.Scanner;
 
 public class MyApplication {
-    private final UserController controller;
+    private final EmployeeController controller;
     private final Scanner scanner;
 
-    public MyApplication(IUserRepository userRepository) {
-        controller = new UserController(userRepository);
+    public MyApplication(IEmployeeRepository userRepository) {
+        controller = new EmployeeController(userRepository);
         scanner = new Scanner(System.in);
     }
 
@@ -28,12 +28,15 @@ public class MyApplication {
                 System.out.print("Enter option (1-3): ");
                 int option = scanner.nextInt();
                 if (option == 1) {
-                    getAllUsersMenu();
+                    getAllEmployeesMenu();
                 } else if (option == 2) {
-                    getUserByIdMenu();
+                    getEmployeeByIdMenu();
                 } else if (option == 3) {
-                    createUserMenu();
-                } else {
+                    createEmployeeMenu();
+                }
+
+
+                else {
                     break;
                 }
             } catch (Exception e) {
@@ -46,28 +49,35 @@ public class MyApplication {
         }
     }
 
-    public void getAllUsersMenu() {
-        String response = controller.getAllUsers();
+    public void getAllEmployeesMenu() {
+        String response = controller.getAllEmployees();
         System.out.println(response);
     }
 
-    public void getUserByIdMenu() {
+    public void getEmployeeByIdMenu() {
         System.out.println("Please enter id");
 
         int id = scanner.nextInt();
-        String response = controller.getUser(id);
+        String response = controller.getEmployee(id);
         System.out.println(response);
     }
 
-    public void createUserMenu() {
+    public void createEmployeeMenu() {
         System.out.println("Please enter name");
         String name = scanner.next();
         System.out.println("Please enter surname");
         String surname = scanner.next();
         System.out.println("Please enter gender (male/female)");
         String gender = scanner.next();
+        System.out.println("Please enter mail");
+        String mail = scanner.next();
+        System.out.println("Please enter position of your job");
+        String JobPosition= scanner.next();
+        System.out.println("Please enter your salary");
+        int salary = scanner.nextInt();
 
-        String response = controller.createUser(name, surname, gender);
+
+        String response = controller.createEmployee(name, surname, gender,mail,JobPosition,salary);
         System.out.println(response);
     }
 }
